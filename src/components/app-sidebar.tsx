@@ -19,12 +19,16 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     url: '/dashboard',
     icon: LayoutDashboard,
     isActive: (pathname) => pathname === '/dashboard',
+    label: '',
+    to: ''
   },
   {
     title: 'Minhas áreas',
     url: '/areas',
     icon: Map,
     isActive: (pathname) => pathname === '/areas' || pathname.startsWith('/areas/'),
+    label: '',
+    to: ''
   },
   {
     title: 'Configurações',
@@ -53,7 +57,9 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
         url: '/configuracoes/culturas',
         icon: Sprout,
       },
-    ]
+    ],
+    label: '',
+    to: ''
   },
 ]
 

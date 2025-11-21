@@ -5,6 +5,7 @@ import { runAuthGuard } from './middlewares/auth-guard';
 import type { GuardResult } from './middlewares/auth-guard';
 import { useAuth } from '../features/auth/hooks/useAuth';
 import { useToast } from '../shared/ui/ToastProvider';
+import { AreasDataProvider } from '@/features/areas/context/AreasDataContext';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar, APP_NAV_ITEMS } from '@/components/app-sidebar';
 import {
@@ -70,9 +71,11 @@ function RouteRenderer() {
 
 export default function App() {
   return (
-    <RouterProvider routes={appRoutes}>
-      <RouteRenderer />
-    </RouterProvider>
+    <AreasDataProvider>
+      <RouterProvider routes={appRoutes}>
+        <RouteRenderer />
+      </RouterProvider>
+    </AreasDataProvider>
   );
 }
 
@@ -80,9 +83,9 @@ function PrivateLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="bg-neutral-50">
+      <SidebarInset className="bg-neutral-50 w-full">
         <PrivateHeader />
-        <div className="flex-1 overflow-y-auto pb-24 lg:pb-0">{children}</div>
+        <div className="flex-1 overflow-y-auto pb-24 lg:pb-0 w-full">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

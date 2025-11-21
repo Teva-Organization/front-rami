@@ -1,7 +1,8 @@
-import { PaginationParams } from "@/features/configuracoes/model/pagination";
+import type { PaginatedResponse, PaginationParams } from "@/features/configuracoes/model/pagination";
 import http from "@/shared/lib/axios";
 import { areasEndpoints } from "./endpoints";
 import { Plant } from "@/entities/plant";
+import type { WFProcess } from "@/entities/workflow";
 
 export type PlantPayload = {
   areaSize: number;
@@ -46,4 +47,21 @@ export async function updatePlant(id: number, payload: PlantPayload) {
 
 export async function deletePlant(id: number) {
   await http.delete(areasEndpoints.plantById(id));
+}
+
+type NextActivitiesParams = PaginationParams & {
+  activityFromId: number;
+  flowId?: number;
+};
+
+export async function fetchNextActivities(params: NextActivitiesParams): Promise<PaginatedResponse<WFProcess>> {
+  const payload = {
+    page: params.page ?? 1,
+    pageSize: params.pageSize ?? 10,
+    activityFromId: params.activityFromId,
+    flowId: params.flowId,
+  };
+
+  const { data } = await http.post<any>(areasEndpoints.wfProcessSearch, payload);
+  return data.data;
 }

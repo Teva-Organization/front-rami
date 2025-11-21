@@ -82,7 +82,7 @@ export default function AtividadesPage() {
     }
   };
 
-  const handleDelete = async (record: WFActivity) => {
+  const handleDelete = React.useCallback(async (record: WFActivity) => {
     const confirm = window.confirm(
       `Deseja remover a atividade "${record.description}"?`,
     );
@@ -96,7 +96,7 @@ export default function AtividadesPage() {
         error?.response?.data?.message ?? 'Não foi possível remover a atividade.';
       showToast({ title: 'Ops!', description: message, variant: 'destructive' });
     }
-  };
+  }, [loadActivities, showToast]);
 
   const columns = React.useMemo<TableColumn<WFActivity>[]>(() => {
     return [
@@ -116,32 +116,34 @@ export default function AtividadesPage() {
         label: 'Atualizado em',
         render: (item) => formatDate(item.updatedAt),
       },
-      {
-        key: 'actions',
-        label: 'Ações',
-        render: (item) => (
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setFormState({ mode: 'edit', record: item })}
-              className="inline-flex items-center gap-1 rounded-full border border-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 transition hover:border-emerald-200"
-            >
-              <Pencil className="h-3.5 w-3.5" />
-              Editar
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDelete(item)}
-              className="inline-flex items-center gap-1 rounded-full border border-red-100 px-3 py-1 text-xs font-semibold text-red-600 transition hover:border-red-200"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              Excluir
-            </button>
-          </div>
-        ),
-      },
     ];
   }, []);
+
+  const actions = React.useMemo(() => {
+    return {
+      label: 'Ações',
+      render: (item: WFActivity) => (
+        <>
+          <button
+            type="button"
+            onClick={() => setFormState({ mode: 'edit', record: item })}
+            className="inline-flex items-center gap-1 rounded-full border border-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 transition hover:border-emerald-200"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            Editar
+          </button>
+          <button
+            type="button"
+            onClick={() => handleDelete(item)}
+            className="inline-flex items-center gap-1 rounded-full border border-red-100 px-3 py-1 text-xs font-semibold text-red-600 transition hover:border-red-200"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Excluir
+          </button>
+        </>
+      ),
+    };
+  }, [handleDelete]);
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-6">
@@ -157,6 +159,7 @@ export default function AtividadesPage() {
         columns={columns}
         rowKey={(item) => item.id}
         isLoading={isLoading}
+        actions={actions}
       />
 
       <PaginationControls

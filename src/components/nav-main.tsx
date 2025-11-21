@@ -22,6 +22,8 @@ import { twMerge } from "tailwind-merge";
 import { useAuth } from "@/features/auth";
 
 export interface AppNavItem {
+  label: string;
+  to: string;
   title: string;
   url: string;
   role?: string;

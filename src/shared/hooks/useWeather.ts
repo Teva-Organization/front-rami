@@ -4,7 +4,7 @@ type Coords = { lat: number; lng: number };
 
 export type WeatherData = {
   current?: { temperature: number; wind: number };
-  daily?: Array<{ date: string; tmin: number; tmax: number; pop?: number | null }>;
+  daily?: Array<{ datetime: string; tempmin: number | null; tempmax: number | null; pop?: number | null }>;
 };
 
 export function useWeather(coords?: Coords | null) {
@@ -29,9 +29,9 @@ export function useWeather(coords?: Coords | null) {
             : undefined,
           daily: Array.isArray(j.daily?.time)
             ? j.daily.time.map((d: string, i: number) => ({
-                date: d,
-                tmin: j.daily.temperature_2m_min?.[i] ?? null,
-                tmax: j.daily.temperature_2m_max?.[i] ?? null,
+                datetime: d,
+                tempmin: j.daily.temperature_2m_min?.[i] ?? null,
+                tempmax: j.daily.temperature_2m_max?.[i] ?? null,
                 pop: j.daily.precipitation_probability_max?.[i] ?? null,
               }))
             : [],
